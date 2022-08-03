@@ -13,7 +13,7 @@
         "name": "username",
         "viewName": "Username",
         "type": "string",
-        "description": "Username (email) used to log into the TestRail account.",
+        "description": "Username (email) used to log into the TestRail account",
         "learnUrl": "https://support.gurock.com/hc/en-us/articles/7077039051284-Accessing-the-TestRail-API",
         "required": true
       },
@@ -21,7 +21,7 @@
         "name": "apiKey",
         "viewName": "API Key",
         "type": "vault",
-        "description": "API key for your TestRail account. You can generate one in TestRail Settings > API Keys.",
+        "description": "API key for your TestRail account. You can generate one in TestRail Settings > API Keys",
         "learnUrl": "https://support.gurock.com/hc/en-us/articles/7077039051284-Accessing-the-TestRail-API",
         "required": true
       },
@@ -29,7 +29,7 @@
         "name": "hostname",
         "viewName": "Hostname",
         "type": "string",
-        "description": "Hostname of your TestRail instance.",
+        "description": "Hostname of your TestRail environment",
         "required": true
       }
     ]
@@ -42,7 +42,7 @@
         {
           "name": "projectId",
           "viewName": "Project",
-          "description": "Project the test run should be added to",
+          "description": "Project the Test Run should be added to",
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listProjects",
@@ -52,7 +52,7 @@
           "name": "testRunName",
           "viewName": "Test Run Name",
           "type": "string",
-          "description": "The name of the test run",
+          "description": "Name of the Test Run",
           "required": true
         },
         {
@@ -61,7 +61,7 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listMilestones",
-          "description": "Milestone to link to the test run"
+          "description": "Milestone to link to the Test Run"
         },
         {
           "name": "assignedToId",
@@ -69,13 +69,13 @@
           "type": "autocomplete",
           "autocompleteType": "function",
           "functionName": "listUsers",
-          "description": "User the test run should be assigned to"
+          "description": "User the Test Run should be assigned to"
         },
         {
           "name": "description",
           "viewName": "Description",
           "type": "text",
-          "description": "Description of the test run"
+          "description": "Description of the Test Run"
         },
         {
           "name": "testCases",
@@ -121,13 +121,14 @@
           "viewName": "Status",
           "type": "autocomplete",
           "autocompleteType": "function",
-          "functionName": "listStatuses"
+          "functionName": "listStatuses",
+          "required": true
         },
         {
           "name": "comment",
           "viewName": "Comment",
           "type": "text",
-          "description": "The comment/description for the test result"
+          "description": "The comment/description for the result"
         },
         {
           "name": "attachments",
@@ -148,13 +149,13 @@
           "name": "version",
           "viewName": "Version",
           "type": "string",
-          "description": "The version or build you tested against"
+          "description": "Version or build you tested against"
         },
         {
           "name": "timeElapsed",
-          "viewName": "Elapsed",
+          "viewName": "Time Elapsed",
           "type": "string",
-          "description": "The time it took to execute the test, e.g. \"30s\" or \"1m 45s\""
+          "description": "Time it took to execute the test, e.g. \"30s\" or \"1m 45s\""
         },
         {
           "name": "defects",
