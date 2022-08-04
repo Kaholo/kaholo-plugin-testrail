@@ -6,6 +6,17 @@
   "version": "0.1.0",
   "imgUrl": "logo.png",
   "main": "app.js",
+  "description": "A web-based test case management tool",
+  "category": [
+    "Testing"
+  ],
+  "keywords": [
+    "test run",
+    "case",
+    "rail",
+    "result",
+    "milestone"
+   ],
   "auth": {
     "authId": "testRailAccount",
     "params": [
