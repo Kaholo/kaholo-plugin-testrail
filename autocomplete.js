@@ -2,6 +2,8 @@ const TestrailApiClient = require("testrail-api");
 const joinUrlParts = require("url-join");
 const { default: axios } = require("axios");
 
+const { sanitizeHostname } = require("./helpers");
+
 function createAutocompleteFunction({
   fetchResult,
   itemsDataPath,
@@ -17,7 +19,7 @@ function createAutocompleteFunction({
     } = params;
 
     const testRailClient = new TestrailApiClient({
-      host: hostname,
+      host: sanitizeHostname(hostname),
       user: username,
       password: apiKey,
     });
@@ -46,7 +48,11 @@ async function listUsers(query, params) {
     username,
     apiKey,
   } = params;
-  const url = joinUrlParts(hostname, "index.php?/api/v2/get_users", String(projectId));
+  const url = joinUrlParts(
+    sanitizeHostname(hostname),
+    "index.php?/api/v2/get_users",
+    String(projectId),
+  );
 
   const { data } = await axios({
     method: "GET",

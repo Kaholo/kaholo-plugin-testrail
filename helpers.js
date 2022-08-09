@@ -14,6 +14,20 @@ async function assertPathsExistence(paths) {
   );
 }
 
+function sanitizeHostname(hostname) {
+  let sanitizedHostname = hostname;
+
+  if (!/^https?:\/\//i.test(hostname)) {
+    sanitizedHostname = `https://${sanitizedHostname}`;
+  }
+  if (sanitizedHostname.startsWith("http://")) {
+    sanitizedHostname = `https://${sanitizedHostname.slice(7)}`;
+  }
+
+  return sanitizedHostname;
+}
+
 module.exports = {
   assertPathsExistence,
+  sanitizeHostname,
 };

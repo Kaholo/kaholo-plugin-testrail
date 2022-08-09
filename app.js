@@ -6,7 +6,10 @@ const FormData = require("form-data");
 const kaholoPluginLibrary = require("@kaholo/plugin-library");
 
 const autocomplete = require("./autocomplete");
-const { assertPathsExistence } = require("./helpers");
+const {
+  assertPathsExistence,
+  sanitizeHostname,
+} = require("./helpers");
 
 async function addTestRun(params) {
   const {
@@ -22,7 +25,7 @@ async function addTestRun(params) {
   } = params;
 
   const testRailClient = new TestrailApiClient({
-    host: hostname,
+    host: sanitizeHostname(hostname),
     user: username,
     password: apiKey,
   });
@@ -67,7 +70,7 @@ async function addTestResult(params) {
   } = params;
 
   const testRailClient = new TestrailApiClient({
-    host: hostname,
+    host: sanitizeHostname(hostname),
     user: username,
     password: apiKey,
   });
@@ -124,7 +127,12 @@ async function uploadAttachments(params) {
 
   await assertPathsExistence(paths);
 
-  const url = joinUrlParts(hostname, "index.php?/api/v2/add_attachment_to_result", String(resultId));
+  const url = joinUrlParts(
+    sanitizeHostname(hostname),
+    "index.php?/api/v2/add_attachment_to_result",
+    String(resultId),
+  );
+
   const addAttachmentPromises = paths.map(async (path) => {
     const formData = new FormData();
     formData.append("attachment", createReadStream(path));
