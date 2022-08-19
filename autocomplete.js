@@ -1,8 +1,10 @@
 const TestrailApiClient = require("testrail-api");
-const joinUrlParts = require("url-join");
 const { default: axios } = require("axios");
 
-const { sanitizeHostname } = require("./helpers");
+const {
+  sanitizeHostname,
+  joinUrlParts,
+} = require("./helpers");
 
 function createAutocompleteFunction({
   fetchResult,

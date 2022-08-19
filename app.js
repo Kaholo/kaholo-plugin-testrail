@@ -1,6 +1,5 @@
 const { default: axios } = require("axios");
 const { createReadStream } = require("fs");
-const joinUrlParts = require("url-join");
 const TestrailApiClient = require("testrail-api");
 const FormData = require("form-data");
 const kaholoPluginLibrary = require("@kaholo/plugin-library");
@@ -9,6 +8,7 @@ const autocomplete = require("./autocomplete");
 const {
   assertPathsExistence,
   sanitizeHostname,
+  joinUrlParts,
 } = require("./helpers");
 
 async function addTestRun(params) {
@@ -97,7 +97,7 @@ async function addTestResult(params) {
 
   const {
     body: addTestResultResponse,
-  } = await testRailClient.addResult(+testId, payload);
+  } = await testRailClient.addResult(testId, payload);
 
   if (attachments) {
     const addAttachmentResponses = await uploadAttachments({

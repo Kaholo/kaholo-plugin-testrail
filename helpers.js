@@ -15,19 +15,27 @@ async function assertPathsExistence(paths) {
 }
 
 function sanitizeHostname(hostname) {
-  let sanitizedHostname = hostname;
+  let sanitizedHostname = null;
 
-  if (!/^https?:\/\//i.test(hostname)) {
-    sanitizedHostname = `https://${sanitizedHostname}`;
-  }
-  if (sanitizedHostname.startsWith("http://")) {
-    sanitizedHostname = `https://${sanitizedHostname.slice(7)}`;
+  if (hostname.startsWith("https://")) {
+    sanitizedHostname = hostname;
+  } else if (hostname.startsWith("http://")) {
+    sanitizedHostname = hostname.replace("http://", "https://");
+  } else {
+    sanitizedHostname = `https://${hostname}`;
   }
 
   return sanitizedHostname;
 }
 
+function joinUrlParts(...parts) {
+  return parts.reduce((acc, cur) => (
+    `${acc.replace(/\/*$/, "")}/${cur.replace(/^\/*/, "")}`
+  ), parts.shift());
+}
+
 module.exports = {
   assertPathsExistence,
   sanitizeHostname,
+  joinUrlParts,
 };
