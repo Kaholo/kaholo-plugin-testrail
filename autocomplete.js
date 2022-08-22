@@ -12,13 +12,21 @@ function createAutocompleteFunction({
   idPath,
   valuePath,
   checkForNestedItems,
+  paramsParsers = {},
 }) {
   return async (query, params) => {
+    const parsedParams = Object.fromEntries(
+      Object.entries(params).map(([key, value]) => [
+        key,
+        Reflect.has(paramsParsers, key) ? paramsParsers[key](value) : value,
+      ]),
+    );
+
     const {
       hostname,
       username,
       apiKey,
-    } = params;
+    } = parsedParams;
 
     const testRailClient = new TestrailApiClient({
       host: sanitizeHostname(hostname),
@@ -26,7 +34,7 @@ function createAutocompleteFunction({
       password: apiKey,
     });
 
-    const { body: result } = await fetchResult(testRailClient, params);
+    const { body: result } = await fetchResult(testRailClient, parsedParams);
     const items = itemsDataPath ? result[itemsDataPath] : result;
 
     if (checkForNestedItems) {
@@ -98,17 +106,20 @@ module.exports = {
     itemsDataPath: "projects",
   }),
   listMilestones: createAutocompleteFunction({
-    fetchResult: (testRailClient, { projectId }) => testRailClient.getMilestones(+projectId),
+    paramsParsers: { projectId: Number },
+    fetchResult: (testRailClient, { projectId }) => testRailClient.getMilestones(projectId),
     itemsDataPath: "milestones",
     checkForNestedItems: true,
   }),
   listTestsForRun: createAutocompleteFunction({
-    fetchResult: (testRailClient, { runId }) => testRailClient.getTests(+runId),
+    paramsParsers: { runId: Number },
+    fetchResult: (testRailClient, { runId }) => testRailClient.getTests(runId),
     itemsDataPath: "tests",
     valuePath: "title",
   }),
   listRuns: createAutocompleteFunction({
-    fetchResult: (testRailClient, { projectId }) => testRailClient.getRuns(+projectId),
+    paramsParsers: { projectId: Number },
+    fetchResult: (testRailClient, { projectId }) => testRailClient.getRuns(projectId),
     itemsDataPath: "runs",
   }),
   listStatuses: createAutocompleteFunction({
@@ -116,7 +127,8 @@ module.exports = {
     valuePath: "label",
   }),
   listResultsForRun: createAutocompleteFunction({
-    fetchResult: (testRailClient, { runId }) => testRailClient.getResultsForRun(+runId),
+    paramsParsers: { runId: Number },
+    fetchResult: (testRailClient, { runId }) => testRailClient.getResultsForRun(runId),
     itemsDataPath: "results",
     valuePath: "comment",
   }),
