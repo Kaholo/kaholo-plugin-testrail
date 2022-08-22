@@ -12,13 +12,13 @@ function createAutocompleteFunction({
   idPath,
   valuePath,
   checkForNestedItems,
-  paramsParsers = {},
 }) {
   return async (query, params) => {
+    const numericalParams = ["projectId", "runId"];
     const parsedParams = Object.fromEntries(
       Object.entries(params).map(([key, value]) => [
         key,
-        Reflect.has(paramsParsers, key) ? paramsParsers[key](value) : value,
+        numericalParams.includes(key) ? Number(value) : value,
       ]),
     );
 
@@ -106,19 +106,16 @@ module.exports = {
     itemsDataPath: "projects",
   }),
   listMilestones: createAutocompleteFunction({
-    paramsParsers: { projectId: Number },
     fetchResult: (testRailClient, { projectId }) => testRailClient.getMilestones(projectId),
     itemsDataPath: "milestones",
     checkForNestedItems: true,
   }),
   listTestsForRun: createAutocompleteFunction({
-    paramsParsers: { runId: Number },
     fetchResult: (testRailClient, { runId }) => testRailClient.getTests(runId),
     itemsDataPath: "tests",
     valuePath: "title",
   }),
   listRuns: createAutocompleteFunction({
-    paramsParsers: { projectId: Number },
     fetchResult: (testRailClient, { projectId }) => testRailClient.getRuns(projectId),
     itemsDataPath: "runs",
   }),
@@ -127,7 +124,6 @@ module.exports = {
     valuePath: "label",
   }),
   listResultsForRun: createAutocompleteFunction({
-    paramsParsers: { runId: Number },
     fetchResult: (testRailClient, { runId }) => testRailClient.getResultsForRun(runId),
     itemsDataPath: "results",
     valuePath: "comment",
