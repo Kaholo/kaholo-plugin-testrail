@@ -3,7 +3,7 @@
   "viewName": "TestRail",
   "type": "executer",
   "execProgram": "node",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "imgUrl": "logo.png",
   "main": "app.js",
   "description": "A web-based test case management tool",
