@@ -1,0 +1,219 @@
+{
+  "name": "testrail",
+  "viewName": "TestRail",
+  "type": "executer",
+  "execProgram": "node",
+  "version": "1.0.0",
+  "imgUrl": "logo.png",
+  "main": "app.js",
+  "description": "A web-based test case management tool",
+  "category": [
+    "Testing"
+  ],
+  "keywords": [
+    "test run",
+    "case",
+    "rail",
+    "result",
+    "milestone"
+   ],
+  "auth": {
+    "authId": "testRailAccount",
+    "params": [
+      {
+        "name": "username",
+        "viewName": "Username",
+        "type": "string",
+        "description": "Username (email) used to log into the TestRail account",
+        "learnUrl": "https://support.gurock.com/hc/en-us/articles/7077039051284-Accessing-the-TestRail-API",
+        "required": true
+      },
+      {
+        "name": "apiKey",
+        "viewName": "API Key",
+        "type": "vault",
+        "description": "API key for your TestRail account. You can generate one in TestRail Settings > API Keys",
+        "learnUrl": "https://support.gurock.com/hc/en-us/articles/7077039051284-Accessing-the-TestRail-API",
+        "required": true
+      },
+      {
+        "name": "hostname",
+        "viewName": "Hostname",
+        "type": "string",
+        "description": "Hostname of your TestRail environment",
+        "required": true
+      }
+    ]
+  },
+  "methods": [
+    {
+      "name": "addTestRun",
+      "viewName": "Add Test Run",
+      "params": [
+        {
+          "name": "projectId",
+          "viewName": "Project",
+          "description": "Project the Test Run should be added to",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjects",
+          "required": true
+        },
+        {
+          "name": "testRunName",
+          "viewName": "Test Run Name",
+          "type": "string",
+          "description": "Name of the Test Run",
+          "required": true
+        },
+        {
+          "name": "milestoneId",
+          "viewName": "Milestone",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listMilestones",
+          "description": "Milestone to link to the Test Run"
+        },
+        {
+          "name": "assignedToId",
+          "viewName": "Assigned To",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listUsers",
+          "description": "User the Test Run should be assigned to"
+        },
+        {
+          "name": "description",
+          "viewName": "Description",
+          "type": "text",
+          "description": "Description of the Test Run"
+        },
+        {
+          "name": "testCases",
+          "viewName": "Test Cases",
+          "type": "text",
+          "parserType": "array",
+          "description": "Test Cases for the custom case selection"
+        }
+      ]
+    },
+    {
+      "name": "addTestResult",
+      "viewName": "Add Test Result",
+      "params": [
+        {
+          "name": "projectId",
+          "viewName": "Project",
+          "description": "Project the test run should be added to",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjects",
+          "required": true
+        },
+        {
+          "name": "runId",
+          "viewName": "Test Run",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listRuns",
+          "required": true
+        },
+        {
+          "name": "testId",
+          "viewName": "Test",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listTestsForRun",
+          "description": "Test the result should be added to",
+          "required": true
+        },
+        {
+          "name": "status",
+          "viewName": "Status",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listStatuses",
+          "required": true
+        },
+        {
+          "name": "comment",
+          "viewName": "Comment",
+          "type": "text",
+          "description": "The comment/description for the result"
+        },
+        {
+          "name": "attachments",
+          "viewName": "Attachments",
+          "type": "text",
+          "parserType": "array",
+          "description": "One-per-line paths to files to be attached to the result"
+        },
+        {
+          "name": "assignedToId",
+          "viewName": "Assigned To",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listUsers",
+          "description": "User the test should be assigned to"
+        },
+        {
+          "name": "version",
+          "viewName": "Version",
+          "type": "string",
+          "description": "Version or build you tested against"
+        },
+        {
+          "name": "timeElapsed",
+          "viewName": "Time Elapsed",
+          "type": "string",
+          "description": "Time it took to execute the test, e.g. \"30s\" or \"1m 45s\""
+        },
+        {
+          "name": "defects",
+          "viewName": "Defects",
+          "type": "text",
+          "description": "A comma-separated list of defects to link to the test result"
+        }
+      ]
+    },
+    {
+      "name": "uploadAttachments",
+      "viewName": "Upload Attachments",
+      "params": [
+        {
+          "name": "projectId",
+          "viewName": "Project",
+          "description": "Project the test run should be added to",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjects",
+          "required": true
+        },
+        {
+          "name": "runId",
+          "viewName": "Test Run",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listRuns",
+          "required": true
+        },
+        {
+          "name": "resultId",
+          "viewName": "Result",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listResultsForRun",
+          "required": true
+        },
+        {
+          "name": "paths",
+          "viewName": "Attachment Paths",
+          "type": "text",
+          "parserType": "array",
+          "description": "Paths on the agent to the attachments",
+          "required": true
+        }
+      ]
+    }
+  ]
+}
