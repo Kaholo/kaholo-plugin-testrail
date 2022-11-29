@@ -10,6 +10,7 @@ const {
   sanitizeHostname,
   joinUrlParts,
 } = require("./helpers");
+const { execute } = require("./testrail-cli");
 
 async function addTestRun(params) {
   const {
@@ -156,11 +157,45 @@ async function uploadAttachments(params) {
   return Promise.all(addAttachmentPromises);
 }
 
+async function runCommand(params) {
+  await execute(params);
+}
+
+async function getTests(params) {
+  const {
+    hostname,
+    username,
+    apiKey,
+    runId,
+    filter,
+  } = params;
+
+  const testRailClient = new TestrailApiClient({
+    host: sanitizeHostname(hostname),
+    user: username,
+    password: apiKey,
+  });
+
+  const filtersArray = filter?.split(",").map(Number);
+
+  const {
+    body: getTestResultResponse,
+  } = await testRailClient.getTests(runId, { status_id: filtersArray });
+
+  console.info("offset: ", getTestResultResponse.offset);
+  console.info("limit: ", getTestResultResponse.limit);
+  console.info("size: ", getTestResultResponse.size);
+
+  return getTestResultResponse;
+}
+
 module.exports = kaholoPluginLibrary.bootstrap(
   {
     addTestRun,
     addTestResult,
     uploadAttachments,
+    runCommand,
+    getTests,
   },
   autocomplete,
 );
