@@ -177,16 +177,20 @@ async function getTests(params) {
   });
 
   const filtersArray = filter?.split(",").map(Number);
+  console.info("filtersArray: ", filtersArray);
 
   const {
     body: getTestResultResponse,
-  } = await testRailClient.getTests(runId, { status_id: filtersArray });
+    // filtering was not working here, so filtering is done in return
+  } = await testRailClient.getTests(runId, {});
 
   console.info("offset: ", getTestResultResponse.offset);
   console.info("limit: ", getTestResultResponse.limit);
   console.info("size: ", getTestResultResponse.size);
 
-  return getTestResultResponse;
+  return filter
+    ? getTestResultResponse?.tests.filter((test) => filtersArray.includes(test.status_id))
+    : getTestResultResponse?.tests;
 }
 
 module.exports = kaholoPluginLibrary.bootstrap(

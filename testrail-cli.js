@@ -45,21 +45,19 @@ const execute = async (params) => {
   const volumeDefinitionsArray = [];
   let shellEnvironmentalVariables = {};
 
-  if (workingDir) {
-    const workingDirVolumeDefinition = await createWorkingDirVolumeDefinition(workingDir);
+  const workingDirVolumeDefinition = await createWorkingDirVolumeDef(workingDir || process.cwd());
 
-    dockerEnvironmentalVariables[workingDirVolumeDefinition.mountPoint.name] = (
-      workingDirVolumeDefinition.mountPoint.value
-    );
+  dockerEnvironmentalVariables[workingDirVolumeDefinition.mountPoint.name] = (
+    workingDirVolumeDefinition.mountPoint.value
+  );
 
-    shellEnvironmentalVariables = {
-      ...dockerEnvironmentalVariables,
-      [workingDirVolumeDefinition.path.name]: workingDirVolumeDefinition.path.value,
-    };
+  shellEnvironmentalVariables = {
+    ...dockerEnvironmentalVariables,
+    [workingDirVolumeDefinition.path.name]: workingDirVolumeDefinition.path.value,
+  };
 
-    volumeDefinitionsArray.push(workingDirVolumeDefinition);
-    dockerCommandBuildOptions.workingDirectory = workingDirVolumeDefinition.mountPoint.value;
-  }
+  volumeDefinitionsArray.push(workingDirVolumeDefinition);
+  dockerCommandBuildOptions.workingDirectory = workingDirVolumeDefinition.mountPoint.value;
 
   dockerCommandBuildOptions.volumeDefinitionsArray = volumeDefinitionsArray;
   dockerCommandBuildOptions.environmentVariables = dockerEnvironmentalVariables;
@@ -107,7 +105,7 @@ function buildTestRailCommand(hostname, username, apiKey, project, title, result
   return `${TESTRAIL_CLI_NAME} -h ${hostname} --project ${project} --username ${username} --password ${apiKey} parse_junit --title "${title}" -f ${resultsFile}`;
 }
 
-async function createWorkingDirVolumeDefinition(workingDir) {
+async function createWorkingDirVolumeDef(workingDir) {
   const absoluteWorkingDirectory = resolvePath(workingDir);
   console.info("absoluteWorkingDirectory: ", absoluteWorkingDirectory);
 
