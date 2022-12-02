@@ -188,9 +188,26 @@ async function getTests(params) {
   console.info("limit: ", getTestResultResponse.limit);
   console.info("size: ", getTestResultResponse.size);
 
-  return filter
-    ? getTestResultResponse?.tests.filter((test) => filtersArray.includes(test.status_id))
-    : getTestResultResponse?.tests;
+  const url = `${hostname}/index.php?/api/v2/get_tests/${runId}&status_id=${filter ? filter.replace(/\s/g, "") : ""}`;
+
+  const credentials = btoa(`${username}1:${apiKey}`);
+
+  let response;
+  try {
+    response = await axios({
+      method: "GET",
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${credentials}`,
+      },
+    });
+  } catch (e) {
+    const errorMsg = e?.response?.data?.error ?? e;
+    throw new Error(errorMsg);
+  }
+
+  return response?.data?.tests;
 }
 
 module.exports = kaholoPluginLibrary.bootstrap(
