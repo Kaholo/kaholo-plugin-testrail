@@ -190,7 +190,7 @@ async function getTests(params) {
 
   const url = `${hostname}/index.php?/api/v2/get_tests/${runId}&status_id=${filter ? filter.replace(/\s/g, "") : ""}`;
 
-  const credentials = btoa(`${username}1:${apiKey}`);
+  const credentials = btoa(`${username}:${apiKey}`);
 
   let response;
   try {
@@ -207,7 +207,7 @@ async function getTests(params) {
     throw new Error(errorMsg);
   }
 
-  return response?.data?.tests;
+  return response.data.tests;
 }
 
 module.exports = kaholoPluginLibrary.bootstrap(
