@@ -74,8 +74,8 @@ const execute = async (params) => {
   });
 
   if (commandOutput?.stderr !== "" && commandOutput?.stderr !== undefined) {
-    console.error(commandOutput.stderr);
     output.cmderr = commandOutput.stderr;
+    return output.cmderr;
   }
 
   if (commandOutput?.stdout !== "" && commandOutput?.stdout !== undefined) {

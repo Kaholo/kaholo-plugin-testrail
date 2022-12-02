@@ -158,7 +158,8 @@ async function uploadAttachments(params) {
 }
 
 async function runCommand(params) {
-  await execute(params);
+  const result = await execute(params);
+  return result;
 }
 
 async function getTests(params) {
@@ -170,27 +171,12 @@ async function getTests(params) {
     filter,
   } = params;
 
-  const testRailClient = new TestrailApiClient({
-    host: sanitizeHostname(hostname),
-    user: username,
-    password: apiKey,
-  });
-
-  const filtersArray = filter?.split(",").map(Number);
-  console.info("filtersArray: ", filtersArray);
-
-  const {
-    body: getTestResultResponse,
-    // filtering was not working here, so filtering is done in return
-  } = await testRailClient.getTests(runId, {});
-
-  console.info("offset: ", getTestResultResponse.offset);
-  console.info("limit: ", getTestResultResponse.limit);
-  console.info("size: ", getTestResultResponse.size);
-
-  const url = `${hostname}/index.php?/api/v2/get_tests/${runId}&status_id=${filter ? filter.replace(/\s/g, "") : ""}`;
-
-  const credentials = btoa(`${username}:${apiKey}`);
+  const url = joinUrlParts(
+    sanitizeHostname(hostname),
+    "/index.php?/api/v2/get_tests",
+    String(runId),
+    filter ? `&status_id=${filter.replace(/\s/g, "")}` : "",
+  );
 
   let response;
   try {
@@ -199,7 +185,10 @@ async function getTests(params) {
       url,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Basic ${credentials}`,
+      },
+      auth: {
+        username,
+        password: apiKey,
       },
     });
   } catch (e) {
