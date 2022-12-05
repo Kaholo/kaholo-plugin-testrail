@@ -1,0 +1,9 @@
+{
+  "PYTHON_DOCKER_IMAGE": "python:3.11.0",
+  "TESTRAIL_CLI_NAME": "trcli",
+
+  "TESTRAIL_INSTALL_TRCLI_COMMANDS": [
+    "python -m pip install --root-user-action=ignore --no-cache-dir --upgrade pip",
+    "python -m pip install --root-user-action=ignore trcli"
+  ]
+}

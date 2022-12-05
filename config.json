@@ -214,6 +214,63 @@
           "required": true
         }
       ]
+    },
+    {
+      "name": "runCommand",
+      "viewName": "Run TestRail CLI Command",
+      "params": [
+        {
+          "name": "workingDir",
+          "viewName": "Working Directory",
+          "type": "string",
+          "description": "This is the location where Testrail will expect to find an inventory and execution script.",
+          "placeholder": "/home/user/tmp/"
+        },
+        {
+          "name": "project",
+          "viewName": "Project",
+          "description": "Project the test run should be added to",
+          "type": "autocomplete",
+          "autocompleteType": "function",
+          "functionName": "listProjectsReturnName",
+          "required": true
+        },
+        {
+          "name": "title",
+          "viewName": "Title",
+          "type": "text",
+          "description": "The title of test run"
+        },
+        {
+          "name": "resultsFile",
+          "viewName": "Results file",
+          "type": "text",
+          "description": "The file containing results"
+        }
+      ]
+    },
+    {
+      "name": "getTests",
+      "viewName": "Get Tests for a Test Run",
+      "params": [
+        {
+          "name": "runId",
+          "viewName": "Run ID",
+          "type": "string",
+          "description": "This is the location where Testrail will expect to find an inventory and execution script.",
+          "placeholder": "/home/user/tmp/",
+          "required": true
+        },
+        {
+          "name": "filter",
+          "viewName": "Filter by Status ID",
+          "type": "string",
+          "description": "Comma separated list of status IDs",
+          "learnUrl": "https://support.gurock.com/hc/en-us/articles/7077935129364-Statuses#getstatuses",
+          "placeholder": "1, 2, 5",
+          "required": false
+        }
+      ]
     }
   ]
 }

@@ -12,6 +12,7 @@ function createAutocompleteFunction({
   idPath,
   valuePath,
   checkForNestedItems,
+  shouldReturnValue = false,
 }) {
   return async (query, params) => {
     const numericalParams = ["projectId", "runId"];
@@ -47,7 +48,7 @@ function createAutocompleteFunction({
       items.push(...nestedItems);
     }
 
-    return mapAndFilterItems(items, query, { valuePath, idPath });
+    return mapAndFilterItems(items, query, { valuePath, idPath }, shouldReturnValue);
   };
 }
 
@@ -80,12 +81,13 @@ function mapAndFilterItems(
   items,
   query,
   {
-    valuePath = "name",
     idPath = "id",
+    valuePath = "name",
   },
+  shouldReturnValue,
 ) {
   const autocompleteItems = items.map((item) => ({
-    id: String(item[idPath]),
+    id: String(shouldReturnValue ? item[valuePath] : item[idPath]),
     value: item[valuePath],
   }));
 
@@ -104,6 +106,11 @@ module.exports = {
   listProjects: createAutocompleteFunction({
     fetchResult: (testRailClient) => testRailClient.getProjects(),
     itemsDataPath: "projects",
+  }),
+  listProjectsReturnName: createAutocompleteFunction({
+    fetchResult: (testRailClient) => testRailClient.getProjects(),
+    itemsDataPath: "projects",
+    shouldReturnValue: true,
   }),
   listMilestones: createAutocompleteFunction({
     fetchResult: (testRailClient, { projectId }) => testRailClient.getMilestones(projectId),

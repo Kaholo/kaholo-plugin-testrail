@@ -10,6 +10,7 @@ const {
   sanitizeHostname,
   joinUrlParts,
 } = require("./helpers");
+const { execute } = require("./testrail-cli");
 
 async function addTestRun(params) {
   const {
@@ -156,11 +157,55 @@ async function uploadAttachments(params) {
   return Promise.all(addAttachmentPromises);
 }
 
+async function runCommand(params) {
+  const result = await execute(params);
+  return result;
+}
+
+async function getTests(params) {
+  const {
+    hostname,
+    username,
+    apiKey,
+    runId,
+    filter,
+  } = params;
+
+  const url = joinUrlParts(
+    sanitizeHostname(hostname),
+    "/index.php?/api/v2/get_tests",
+    String(runId),
+    filter ? `&status_id=${filter.replace(/\s/g, "")}` : "",
+  );
+
+  let response;
+  try {
+    response = await axios({
+      method: "GET",
+      url,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      auth: {
+        username,
+        password: apiKey,
+      },
+    });
+  } catch (e) {
+    const errorMsg = e?.response?.data?.error ?? e;
+    throw new Error(errorMsg);
+  }
+
+  return response.data.tests;
+}
+
 module.exports = kaholoPluginLibrary.bootstrap(
   {
     addTestRun,
     addTestResult,
     uploadAttachments,
+    runCommand,
+    getTests,
   },
   autocomplete,
 );
